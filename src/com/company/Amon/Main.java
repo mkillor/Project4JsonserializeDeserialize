@@ -1,11 +1,19 @@
 /*
-Benton Amon
-Project 3
+Mr. K
+help project 4
  */
 
 
 package com.company.Amon;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -22,6 +30,8 @@ public class Main {
         System.out.println("(3) Update a task.");
         System.out.println("(4) List all tasks.");
         System.out.println("(5) List all tasks of a certain priority.");
+        System.out.println("(6) Save.");
+        System.out.println("(7) Load.");
         System.out.println("(0) Exit.");
     }
 
@@ -135,6 +145,41 @@ public class Main {
 
     // ------------
 
+    static ArrayList<Item> saveFile(ArrayList<Item> a) {
+        Gson gson = new Gson();
+        try {
+            FileWriter writer = new FileWriter("data.json");
+            gson.toJson(a, writer);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+
+
+    static ArrayList<Item> loadFile(ArrayList<Item> a){
+        Type toDoListType = new TypeToken<ArrayList<Item>>(){}.getType();
+        ArrayList<Item> tasks = null;
+        
+        Gson gson = new Gson();
+        FileReader reader = null;
+        try {
+            reader = new FileReader("data.json");
+            tasks = gson.fromJson(reader, toDoListType);
+            reader.close();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return tasks;//need Token in main for this to work
+        
+    }
+
+
+
     public static void main(String[] args) {
         //Scanner input = new Scanner(System.in);
 
@@ -165,6 +210,12 @@ public class Main {
                         break;
                     case "5":
                         displayPriority(taskList);
+                        break;
+                    case "6":
+                        saveFile(taskList);
+                        break;
+                    case "7":
+                        loadFile(taskList);
                         break;
                     case "0":
                         exitProgram();
